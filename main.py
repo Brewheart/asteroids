@@ -2,20 +2,27 @@
 # the open-source pygame library
 # throughout this file
 import pygame
-from player import Player
+from player import *
 from constants import *
 
-def game_loop(screen, clock, player):
+updatable = pygame.sprite.Group()
+drawable = pygame.sprite.Group()
+
+Player.containers = (updatable, drawable)
+
+
+
+def game_loop(screen, clock):
 	while True:	
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				return
 		
-		time_passed = clock.tick(60) / 1000
-		update_game(time_passed) 
+		dt = clock.tick(60) / 1000
+		updatable.update(dt)
 
 		screen.fill((0, 0, 0))
-		player.draw(screen)
+		drawable.draw(screen)
 		pygame.display.flip()
 
 def main():
@@ -26,12 +33,8 @@ def main():
 	print(f"Screen height: {SCREEN_HEIGHT}")
 	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 	player = Player(SCREEN_WIDTH /2, SCREEN_HEIGHT / 2)
-	game_loop(screen, clock, player)
+	game_loop(screen, clock)
 
-
-def update_game(delta_time):
-	#move_player(delta_time)
-	pass
 
 if __name__ == "__main__":
     main()
